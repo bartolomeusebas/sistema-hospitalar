@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pacientes</title>
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- ICONES -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
+</head>
+
+<body class="sb-nav-fixed">
+
+    <!-- NAVBAR -->
+    <nav class="sb-topnav navbar navbar-dark bg-dark">
+        <a class="navbar-brand ps-3">Sistema Hospitalar</a>
+    </nav>
+
+    <div id="layoutSidenav">
+
+        <!-- MENU -->
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark">
+                <div id="menu-container"></div>
+            </nav>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div id="layoutSidenav_content">
+            <main class="container-fluid px-4 mt-4">
+
+                <h1 class="mt-4">Pacientes</h1>
+
+                <button class="btn btn-primary mb-3" onclick="abrirModal()">
+                    Novo Paciente
+                </button>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Sexo</th>
+                            <th>Data Nascimento</th>
+                            <th>Telefone</th>
+                            <th>Endereço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPacientes">
+                        <!-- preenchido via JS -->
+                    </tbody>
+                </table>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="pacienteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Paciente</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="id">
+
+                    <div class="mb-2">
+                        <label>Nome</label>
+                        <input type="text" id="nome" class="form-control" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Sexo</label>
+                        <select id="sexo" class="form-control">
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Data de Nascimento</label>
+                        <input type="date" id="data_nascimento" class="form-control">
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Telefone</label>
+                        <input type="text" id="telefone" class="form-control">
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Endereço</label>
+                        <textarea id="endereco" class="form-control"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvar()">Salvar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        // 🔹 CARREGAR MENU
+        fetch("/menu.html")
+            .then(res => res.text())
+            .then(html => document.getElementById("menu-container").innerHTML = html)
+            .catch(err => console.error("Erro ao carregar menu:", err));
+
+        // 🔹 MODAL
+        let modal = new bootstrap.Modal(document.getElementById('pacienteModal'));
+
+        function abrirModal() {
+            document.getElementById("id").value = "";
+            document.getElementById("nome").value = "";
+            document.getElementById("sexo").value = "M";
+            document.getElementById("data_nascimento").value = "";
+            document.getElementById("telefone").value = "";
+            document.getElementById("endereco").value = "";
+
+            modal.show();
+        }
+
+        // 🔹 LISTAR PACIENTES
+        function listar() {
+            fetch("/pacientes")
+                .then(res => res.json())
+                .then(data => {
+
+                    let tabela = document.getElementById("tabelaPacientes");
+                    tabela.innerHTML = "";
+
+                    data.forEach(p => {
+                        tabela.innerHTML += `
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.nome}</td>
+                            <td>${p.sexo}</td>
+                            <td>${p.data_nascimento ? p.data_nascimento.split("T")[0] : ""}</td>
+                            <td>${p.telefone || ""}</td>
+                            <td>${p.endereco || ""}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editar(${JSON.stringify(p)})'>
+                                    Editar
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick='eliminar(${p.id})'>
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                        `;
+                    });
+
+                })
+                .catch(err => console.error("Erro ao listar pacientes:", err));
+        }
+
+        // 🔹 SALVAR
+        function salvar() {
+
+            let id = document.getElementById("id").value;
+
+            let dados = {
+                nome: document.getElementById("nome").value,
+                sexo: document.getElementById("sexo").value,
+                data_nascimento: document.getElementById("data_nascimento").value,
+                telefone: document.getElementById("telefone").value,
+                endereco: document.getElementById("endereco").value
+            };
+
+            let url = "/pacientes";
+            let metodo = "POST";
+
+            if (id) {
+                url += "/" + id;
+                metodo = "PUT";
+            }
+
+            fetch(url, {
+                method: metodo,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados)
+            })
+                .then(res => res.json())
+                .then(() => {
+                    modal.hide();
+                    listar();
+                })
+                .catch(err => console.error("Erro ao salvar:", err));
+        }
+
+        // 🔹 EDITAR
+        function editar(p) {
+            document.getElementById("id").value = p.id;
+            document.getElementById("nome").value = p.nome;
+            document.getElementById("sexo").value = p.sexo;
+            document.getElementById("data_nascimento").value = p.data_nascimento?.split("T")[0];
+            document.getElementById("telefone").value = p.telefone;
+            document.getElementById("endereco").value = p.endereco;
+
+            modal.show();
+        }
+
+        // 🔹 ELIMINAR
+        function eliminar(id) {
+            if (confirm("Deseja eliminar?")) {
+                fetch("/pacientes/" + id, { method: "DELETE" })
+                    .then(() => listar())
+                    .catch(err => console.error("Erro ao eliminar:", err));
+            }
+        }
+
+        // 🔹 INICIAR
+        document.addEventListener("DOMContentLoaded", () => {
+            listar();
+        });
+
+    </script>
+
+</body>
+
+</html>

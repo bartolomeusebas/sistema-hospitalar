@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usuários</title>
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
+<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand ps-3" href="#">Hospital</a>
+</nav>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div id="menu-container"></div>
+        </nav>
+    </div>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Usuários</h1>
+                <button class="btn btn-success mb-3" onclick="abrirModal()">Adicionar Usuário</button>
+                <table id="usuariosTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Função</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal Usuário -->
+<div class="modal fade" id="usuarioModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="modalTitle" class="modal-title">Adicionar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="id">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" id="nome" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha</label>
+                    <input type="password" id="senha" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Função</label>
+                    <select id="tipo" class="form-select">
+                        <option value="admin">Admin</option>
+                        <option value="medico">Médico</option>
+                        <option value="tecnico">Técnico</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="salvar()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Carrega o menu
+    fetch("/menu.html")
+        .then(res => res.text())
+        .then(data => document.getElementById("menu-container").innerHTML = data);
+
+    let modal = new bootstrap.Modal(document.getElementById('usuarioModal'));
+
+    function abrirModal() {
+        document.getElementById("id").value = "";
+        document.getElementById("nome").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("senha").value = "";
+        document.getElementById("tipo").value = "admin";
+        document.getElementById("modalTitle").innerText = "Adicionar Usuário";
+        modal.show();
+    }
+
+    function listar() {
+        fetch("/users")
+            .then(res => res.json())
+            .then(data => {
+                const tabela = document.querySelector("#usuariosTable tbody");
+                tabela.innerHTML = "";
+                data.forEach(u => {
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${u.id}</td>
+                            <td>${u.nome}</td>
+                            <td>${u.email}</td>
+                            <td>${u.tipo}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick='editar(${JSON.stringify(u)})'>Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick='eliminar(${u.id})'>Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+    }
+
+    function salvar() {
+        const id = document.getElementById("id").value;
+        const dados = {
+            nome: document.getElementById("nome").value,
+            email: document.getElementById("email").value,
+            senha: document.getElementById("senha").value,
+            tipo: document.getElementById("tipo").value
+        };
+        let url = "/users";
+        let metodo = "POST";
+        if (id) { url += "/" + id; metodo = "PUT"; }
+        fetch(url, { method: metodo, headers: { "Content-Type": "application/json" }, body: JSON.stringify(dados) })
+            .then(() => { modal.hide(); listar(); });
+    }
+
+    function editar(u) {
+        document.getElementById("id").value = u.id;
+        document.getElementById("nome").value = u.nome;
+        document.getElementById("email").value = u.email;
+        document.getElementById("senha").value = "";
+        document.getElementById("tipo").value = u.tipo;
+        document.getElementById("modalTitle").innerText = "Editar Usuário";
+        modal.show();
+    }
+
+    function eliminar(id) {
+        if (confirm("Deseja eliminar este usuário?")) {
+            fetch("/users/" + id, { method: "DELETE" }).then(() => listar());
+        }
+    }
+
+    window.onload = listar;
+</script>
+</body>
+</html>
