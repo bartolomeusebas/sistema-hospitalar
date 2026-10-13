@@ -1,49 +1,128 @@
-const User = require("../models/user.model");
+const User = require('../models/user.model');
 
-// Criar usuário
-exports.createUser = (req, res) => {
-    const user = req.body;
-    User.create(user, (err, result) => {
-        if (err) return res.status(500).json({ erro: err });
-        res.json({ mensagem: "Usuário criado com sucesso!" });
-    });
+exports.createUser = async (req, res) => {
+    try {
+        const { nome, email, senha, tipo } = req.body;
+
+        if (!nome || !email || !senha || !tipo) {
+            return res.status(400).json({
+                erro: 'Nome, email, senha e tipo são obrigatórios'
+            });
+        }
+
+        const user = await User.create({
+            nome,
+            email,
+            senha,
+            tipo
+        });
+
+        res.status(201).json({
+            mensagem: 'Usuário criado com sucesso!',
+            usuario: user
+        });
+    } catch (err) {
+        console.error(err);
+
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({
+                erro: 'O email informado já está registado'
+            });
+        }
+
+        res.status(500).json({
+            erro: 'Erro ao criar usuário'
+        });
+    }
 };
 
-// Listar todos os usuários
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.getAll();
         res.json(users);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err);
+        res.status(500).json({
+            erro: 'Erro ao consultar usuários'
+        });
     }
 };
 
-// Buscar usuário por ID
-exports.getUserById = (req, res) => {
-    const { id } = req.params;
-    User.getById(id, (err, results) => {
-        if (err) return res.status(500).json({ erro: err });
-        if (results.length === 0) return res.status(404).json({ mensagem: "Usuário não encontrado" });
-        res.json(results[0]);
-    });
+exports.getUserById = async (req, res) => {
+    try {
+        const user = await User.getById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                erro: 'Usuário não encontrado'
+            });
+        }
+
+        res.json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            erro: 'Erro ao consultar usuário'
+        });
+    }
 };
 
-// Atualizar usuário
-exports.updateUser = (req, res) => {
-    const { id } = req.params;
-    const user = req.body;
-    User.update(id, user, (err, result) => {
-        if (err) return res.status(500).json({ erro: err });
-        res.json({ mensagem: "Usuário atualizado com sucesso!" });
-    });
+exports.updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, email, senha, tipo } = req.body;
+
+        const existingUser = await User.getById(id);
+
+        if (!existingUser) {
+            return res.status(404).json({
+                erro: 'Usuário não encontrado'
+            });
+        }
+
+        await User.update(id, {
+            nome: nome ?? existingUser.nome,
+            email: email ?? existingUser.email,
+            senha: senha ?? existingUser.senha,
+            tipo: tipo ?? existingUser.tipo
+        });
+
+        res.json({
+            mensagem: 'Usuário atualizado com sucesso!'
+        });
+    } catch (err) {
+        console.error(err);
+
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({
+                erro: 'O email informado já está registado'
+            });
+        }
+
+        res.status(500).json({
+            erro: 'Erro ao atualizar usuário'
+        });
+    }
 };
 
-// Deletar usuário
-exports.deleteUser = (req, res) => {
-    const { id } = req.params;
-    User.delete(id, (err, result) => {
-        if (err) return res.status(500).json({ erro: err });
-        res.json({ mensagem: "Usuário removido com sucesso!" });
-    });
+exports.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await User.delete(id);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                erro: 'Usuário não encontrado'
+            });
+        }
+
+        res.json({
+            mensagem: 'Usuário removido com sucesso!'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            erro: 'Erro ao remover usuário'
+        });
+    }
 };

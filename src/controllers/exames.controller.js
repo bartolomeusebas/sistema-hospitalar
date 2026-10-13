@@ -5,14 +5,18 @@ module.exports = {
     try {
       const data = {
         paciente_id: req.body.paciente_id,
-        usuario_id: req.body.usuario_id, // pode vir do usuário logado
+        usuario_id: req.user?.id || req.body.usuario_id || null,
         tipo: req.body.tipo,
         imagem: req.file ? req.file.filename : null,
-        data_exame: new Date() // data do sistema
+        data_exame: req.body.data_exame || new Date()
       };
 
+      if (!data.paciente_id || !data.usuario_id || !data.tipo) {
+        return res.status(400).json({ erro: "Paciente, utilizador e tipo de exame são obrigatórios." });
+      }
+
       const [result] = await Exame.create(data); // mysql2 promise
-      res.json({ mensagem: "Exame cadastrado com sucesso!", id: result.insertId });
+      res.status(201).json({ mensagem: "Exame cadastrado com sucesso!", id: result.insertId });
     } catch (err) {
       console.error(err);
       res.status(500).json({ erro: err.message });
@@ -30,9 +34,9 @@ module.exports = {
 
   findById: async (req, res) => {
     try {
-      const [exame] = await Exame.getById(req.params.id);
-      if (!exame.length) return res.status(404).json({ mensagem: "Exame não encontrado" });
-      res.json(exame[0]);
+      const exame = await Exame.getById(req.params.id);
+      if (!exame) return res.status(404).json({ mensagem: "Exame não encontrado" });
+      res.json(exame);
     } catch (err) {
       res.status(500).json({ erro: err.message });
     }
@@ -40,7 +44,10 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      await Exame.delete(req.params.id);
+      const [result] = await Exame.delete(req.params.id);
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ mensagem: "Exame não encontrado" });
+      }
       res.json({ mensagem: "Exame deletado com sucesso!" });
     } catch (err) {
       res.status(500).json({ erro: err.message });

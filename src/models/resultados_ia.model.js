@@ -1,49 +1,47 @@
 const db = require("../../service/database");
 
-class ResultadoIA {
-
-    // Criar resultado
-    static create(resultado, callback) {
+const ResultadoIA = {
+    create: async (resultado) => {
         const sql = `
             INSERT INTO resultados_ia (exame_id, diagnostico, probabilidade, observacao)
             VALUES (?, ?, ?, ?)
         `;
-
-        db.query(sql, [
+        return await db.execute(sql, [
             resultado.exame_id,
             resultado.diagnostico,
             resultado.probabilidade,
             resultado.observacao
-        ], callback);
-    }
+        ]);
+    },
 
-    // Listar todos
-    static getAll(callback) {
+    getAll: async () => {
         const sql = `
-            SELECT resultados_ia.*, exames.tipo, exames.imagem
+            SELECT resultados_ia.*, exames.tipo, exames.imagem, pacientes.nome AS paciente_nome
             FROM resultados_ia
             JOIN exames ON resultados_ia.exame_id = exames.id
+            JOIN pacientes ON exames.paciente_id = pacientes.id
+            ORDER BY resultados_ia.criado_em DESC
         `;
-        db.query(sql, callback);
-    }
+        const [rows] = await db.execute(sql);
+        return rows;
+    },
 
-    // Buscar por ID
-    static getById(id, callback) {
+    getById: async (id) => {
         const sql = "SELECT * FROM resultados_ia WHERE id=?";
-        db.query(sql, [id], callback);
-    }
+        const [rows] = await db.execute(sql, [id]);
+        return rows[0];
+    },
 
-    // Buscar por exame
-    static getByExame(exame_id, callback) {
+    getByExame: async (exame_id) => {
         const sql = "SELECT * FROM resultados_ia WHERE exame_id=?";
-        db.query(sql, [exame_id], callback);
-    }
+        const [rows] = await db.execute(sql, [exame_id]);
+        return rows;
+    },
 
-    // Deletar
-    static delete(id, callback) {
+    delete: async (id) => {
         const sql = "DELETE FROM resultados_ia WHERE id=?";
-        db.query(sql, [id], callback);
+        return await db.execute(sql, [id]);
     }
-}
+};
 
 module.exports = ResultadoIA;

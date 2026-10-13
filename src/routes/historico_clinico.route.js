@@ -1,13 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const historicoController = require("../controllers/historico_clinico.controller");
+const controller = require("../controllers/historico_clinico.controller");
 
-// Rotas
-router.post("/historico", historicoController.createHistorico);
-router.get("/historico", historicoController.getHistoricos);
-router.get("/historico/:id", historicoController.getHistoricoById);
-router.get("/historico/paciente/:paciente_id", historicoController.getHistoricoByPaciente);
-router.put("/historico/:id", historicoController.updateHistorico);
-router.delete("/historico/:id", historicoController.deleteHistorico);
+// IMPORTANTE: rota específica vem antes da genérica
+
+router.get("/paciente/:paciente_id", controller.getHistoricoByPaciente);
+
+router.get("/", controller.getHistoricos);
+
+router.get("/:id", controller.getHistoricoById);
+
+router.post("/", controller.createHistorico);
+
+router.put("/:id", controller.updateHistorico);
+
+router.delete("/:id", controller.deleteHistorico);
 
 module.exports = router;

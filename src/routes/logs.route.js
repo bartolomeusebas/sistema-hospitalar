@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const logController = require("../controllers/logs.controller");
 
-// Rotas
-router.post("/logs", logController.createLog);
-router.get("/logs", logController.getLogs);
-router.get("/logs/:id", logController.getLogById);
-router.get("/logs/user/:usuario_id", logController.getLogsByUser);
-router.delete("/logs/:id", logController.deleteLog);
+// IMPORTANTE: rotas específicas ANTES das genéricas
+router.get("/user/:usuario_id", logController.getLogsByUser);
+router.post("/", logController.createLog);
+router.get("/", logController.getLogs);
+router.get("/:id", logController.getLogById);
+router.delete("/:id", logController.deleteLog);
 
 module.exports = router;

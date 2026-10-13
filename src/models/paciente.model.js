@@ -13,30 +13,40 @@ const Paciente = {
     },
 
     create: async (data) => {
-        const { nome, sexo, data_nascimento, telefone, endereco } = data;
+        const {
+            nome, sexo, data_nascimento, telefone, endereco,
+            tipo_sanguineo, alergias, medico_responsavel, condicoes_ativas
+        } = data;
 
         const [result] = await db.execute(
-            `INSERT INTO pacientes (nome, sexo, data_nascimento, telefone, endereco) 
-             VALUES (?, ?, ?, ?, ?)`,
-            [nome, sexo, data_nascimento, telefone, endereco]
+            `INSERT INTO pacientes
+             (nome, sexo, data_nascimento, telefone, endereco, tipo_sanguineo, alergias, medico_responsavel, condicoes_ativas)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [nome, sexo, data_nascimento, telefone, endereco, tipo_sanguineo || null, alergias || null, medico_responsavel || null, condicoes_ativas || null]
         );
 
         return result;
     },
 
     update: async (id, data) => {
-        const { nome, sexo, data_nascimento, telefone, endereco } = data;
+        const {
+            nome, sexo, data_nascimento, telefone, endereco,
+            tipo_sanguineo, alergias, medico_responsavel, condicoes_ativas
+        } = data;
 
-        await db.execute(
+        const [result] = await db.execute(
             `UPDATE pacientes 
-             SET nome=?, sexo=?, data_nascimento=?, telefone=?, endereco=? 
+            SET nome=?, sexo=?, data_nascimento=?, telefone=?, endereco=?
+                , tipo_sanguineo=?, alergias=?, medico_responsavel=?, condicoes_ativas=?
              WHERE id=?`,
-            [nome, sexo, data_nascimento, telefone, endereco, id]
+            [nome, sexo, data_nascimento, telefone, endereco, tipo_sanguineo || null, alergias || null, medico_responsavel || null, condicoes_ativas || null, id]
         );
+        return result;
     },
 
     delete: async (id) => {
-        await db.execute("DELETE FROM pacientes WHERE id=?", [id]);
+        const [result] = await db.execute("DELETE FROM pacientes WHERE id=?", [id]);
+        return result;
     }
 
 };

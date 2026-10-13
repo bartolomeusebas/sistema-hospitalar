@@ -1,62 +1,40 @@
 const db = require("../../service/database");
 
-class HistoricoClinico {
+const HistoricoClinico = {
+    create: async (dados) => {
+        const sql = `INSERT INTO historico_clinico (paciente_id, descricao) VALUES (?, ?)`;
+        return await db.execute(sql, [dados.paciente_id, dados.descricao]);
+    },
 
-    // Criar registro
-    static create(dados, callback) {
-        const sql = `
-            INSERT INTO historico_clinico (paciente_id, descricao)
-            VALUES (?, ?)
-        `;
+    getByPaciente: async (paciente_id) => {
+        const sql = `SELECT * FROM historico_clinico WHERE paciente_id = ? ORDER BY id DESC`;
+        const [rows] = await db.execute(sql, [paciente_id]);
+        return rows;
+    },
 
-        db.query(sql, [
-            dados.paciente_id,
-            dados.descricao
-        ], callback);
-    }
+    getAll: async () => {
+        const sql = `SELECT historico_clinico.*, pacientes.nome AS paciente_nome
+                     FROM historico_clinico
+                     JOIN pacientes ON historico_clinico.paciente_id = pacientes.id`;
+        const [rows] = await db.execute(sql);
+        return rows;
+    },
 
-    // Listar todos
-    static getAll(callback) {
-        const sql = `
-            SELECT historico_clinico.*, pacientes.nome AS paciente_nome
-            FROM historico_clinico
-            JOIN pacientes ON historico_clinico.paciente_id = pacientes.id
-        `;
-
-        db.query(sql, callback);
-    }
-
-    // Buscar por ID
-    static getById(id, callback) {
+    getById: async (id) => {
         const sql = "SELECT * FROM historico_clinico WHERE id=?";
-        db.query(sql, [id], callback);
-    }
+        const [rows] = await db.execute(sql, [id]);
+        return rows[0];
+    },
 
-    // Buscar por paciente
-    static getByPaciente(paciente_id, callback) {
-        const sql = "SELECT * FROM historico_clinico WHERE paciente_id=?";
-        db.query(sql, [paciente_id], callback);
-    }
+    update: async (id, dados) => {
+        const sql = `UPDATE historico_clinico SET descricao=? WHERE id=?`;
+        return await db.execute(sql, [dados.descricao, id]);
+    },
 
-    // Atualizar
-    static update(id, dados, callback) {
-        const sql = `
-            UPDATE historico_clinico 
-            SET descricao=? 
-            WHERE id=?
-        `;
-
-        db.query(sql, [
-            dados.descricao,
-            id
-        ], callback);
-    }
-
-    // Deletar
-    static delete(id, callback) {
+    delete: async (id) => {
         const sql = "DELETE FROM historico_clinico WHERE id=?";
-        db.query(sql, [id], callback);
+        return await db.execute(sql, [id]);
     }
-}
+};
 
 module.exports = HistoricoClinico;

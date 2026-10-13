@@ -1,54 +1,52 @@
 const Log = require("../models/logs.model");
 
-// Criar log manual (ou automático)
-exports.createLog = (req, res) => {
-    const log = req.body;
-
-    Log.create(log, (err, result) => {
-        if (err) return res.status(500).json({ erro: err });
-
+exports.createLog = async (req, res) => {
+    try {
+        await Log.create(req.body);
         res.json({ mensagem: "Log registrado com sucesso!" });
-    });
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
 };
 
-// Listar logs
-exports.getLogs = (req, res) => {
-    Log.getAll((err, results) => {
-        if (err) return res.status(500).json({ erro: err });
+exports.getLogs = async (req, res) => {
+    try {
+        console.log("GET /logs chamado"); // DEBUG
+        const results = await Log.getAll();
+        console.log("Logs encontrados:", results.length); // DEBUG
         res.json(results);
-    });
+    } catch (err) {
+        console.error("Erro ao listar logs:", err); // DEBUG
+        res.status(500).json({ erro: err.message });
+    }
 };
 
-// Buscar por ID
-exports.getLogById = (req, res) => {
-    const { id } = req.params;
-
-    Log.getById(id, (err, results) => {
-        if (err) return res.status(500).json({ erro: err });
-        if (results.length === 0) {
-            return res.status(404).json({ mensagem: "Log não encontrado" });
-        }
-        res.json(results[0]);
-    });
+exports.getLogById = async (req, res) => {
+    try {
+        console.log("GET /logs/:id chamado com ID:", req.params.id); // DEBUG
+        const result = await Log.getById(req.params.id);
+        if (!result) return res.status(404).json({ mensagem: "Log não encontrado" });
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
 };
 
-// Buscar por usuário
-exports.getLogsByUser = (req, res) => {
-    const { usuario_id } = req.params;
-
-    Log.getByUser(usuario_id, (err, results) => {
-        if (err) return res.status(500).json({ erro: err });
+exports.getLogsByUser = async (req, res) => {
+    try {
+        console.log("GET /logs/user/:usuario_id chamado"); // DEBUG
+        const results = await Log.getByUser(req.params.usuario_id);
         res.json(results);
-    });
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
 };
 
-// Deletar
-exports.deleteLog = (req, res) => {
-    const { id } = req.params;
-
-    Log.delete(id, (err, result) => {
-        if (err) return res.status(500).json({ erro: err });
-
+exports.deleteLog = async (req, res) => {
+    try {
+        await Log.delete(req.params.id);
         res.json({ mensagem: "Log removido com sucesso!" });
-    });
+    } catch (err) {
+        res.status(500).json({ erro: err.message });
+    }
 };

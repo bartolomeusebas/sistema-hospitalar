@@ -1,9 +1,43 @@
 const Paciente = require("../models/paciente.model");
 
+const calculateAge = (date) => {
+    if (!date) return 0;
+    const birthDate = new Date(date);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) age--;
+    return age;
+};
+
+const presentPatient = (patient) => {
+    if (!patient) return null;
+    const id = String(patient.id);
+    const gender = patient.sexo === "M" ? "Male" : patient.sexo === "F" ? "Female" : "Other";
+    return {
+        id,
+        mrn: patient.mrn || `MRN-${id.padStart(6, "0")}`,
+        name: patient.nome,
+        gender,
+        dob: patient.data_nascimento,
+        age: calculateAge(patient.data_nascimento),
+        bloodType: patient.tipo_sanguineo || "Não informado",
+        allergies: patient.alergias ? String(patient.alergias).split(",").map((item) => item.trim()).filter(Boolean) : [],
+        height: patient.altura || "Não informado",
+        weight: patient.peso || "Não informado",
+        primaryCare: patient.medico_responsavel || "Não atribuído",
+        activeConditions: patient.condicoes_ativas ? String(patient.condicoes_ativas).split(",").map((item) => item.trim()).filter(Boolean) : [],
+        lastVisit: patient.ultima_visita || "Sem visitas registradas",
+        status: patient.status || "Active",
+        examCount: Number(patient.exam_count || 0),
+        avatar: patient.avatar || undefined
+    };
+};
+
 exports.getAll = async (req, res) => {
     try {
         const pacientes = await Paciente.getAll();
-        res.json(pacientes);
+        res.json(pacientes.map(presentPatient));
     } catch (err) {
         res.status(500).json({ erro: err.message });
     }
@@ -17,7 +51,7 @@ exports.getById = async (req, res) => {
             return res.status(404).json({ mensagem: "Paciente não encontrado" });
         }
 
-        res.json(paciente);
+        res.json(presentPatient(paciente));
     } catch (err) {
         res.status(500).json({ erro: err.message });
     }
@@ -26,7 +60,8 @@ exports.getById = async (req, res) => {
 exports.create = async (req, res) => {
     try {
         const result = await Paciente.create(req.body);
-        res.json({ mensagem: "Paciente criado!", id: result.insertId });
+        const paciente = await Paciente.getById(result.insertId);
+        res.status(201).json({ mensagem: "Paciente criado!", id: result.insertId, paciente: presentPatient(paciente) });
     } catch (err) {
         res.status(500).json({ erro: err.message });
     }
@@ -34,7 +69,10 @@ exports.create = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-        await Paciente.update(req.params.id, req.body);
+        const result = await Paciente.update(req.params.id, req.body);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ mensagem: "Paciente não encontrado" });
+        }
         res.json({ mensagem: "Atualizado com sucesso!" });
     } catch (err) {
         res.status(500).json({ erro: err.message });
@@ -43,7 +81,10 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        await Paciente.delete(req.params.id);
+        const result = await Paciente.delete(req.params.id);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ mensagem: "Paciente não encontrado" });
+        }
         res.json({ mensagem: "Eliminado com sucesso!" });
     } catch (err) {
         res.status(500).json({ erro: err.message });

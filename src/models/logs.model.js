@@ -1,49 +1,38 @@
 const db = require("../../service/database");
 
-class Log {
+const Log = {
+    create: async (log) => {
+        const sql = `INSERT INTO logs (usuario_id, acao) VALUES (?, ?)`;
+        return await db.execute(sql, [log.usuario_id, log.acao]);
+    },
 
-    // Criar log
-    static create(log, callback) {
-        const sql = `
-            INSERT INTO logs (usuario_id, acao)
-            VALUES (?, ?)
-        `;
-
-        db.query(sql, [
-            log.usuario_id,
-            log.acao
-        ], callback);
-    }
-
-    // Listar todos logs
-    static getAll(callback) {
+    getAll: async () => {
         const sql = `
             SELECT logs.*, users.nome AS usuario_nome
             FROM logs
             LEFT JOIN users ON logs.usuario_id = users.id
             ORDER BY logs.data_log DESC
         `;
+        const [rows] = await db.execute(sql);
+        return rows;
+    },
 
-        db.query(sql, callback);
-    }
-
-    // Buscar por ID
-    static getById(id, callback) {
+    getById: async (id) => {
         const sql = "SELECT * FROM logs WHERE id=?";
-        db.query(sql, [id], callback);
-    }
+        const [rows] = await db.execute(sql, [id]);
+        return rows[0];
+    },
 
-    // Buscar por usuário
-    static getByUser(usuario_id, callback) {
-        const sql = "SELECT * FROM logs WHERE usuario_id=?";
-        db.query(sql, [usuario_id], callback);
-    }
+    getByUser: async (usuario_id) => {
+        const sql = "SELECT * FROM logs WHERE usuario_id=? ORDER BY data_log DESC";
+        const [rows] = await db.execute(sql, [usuario_id]);
+        return rows;
+    },
 
-    // Deletar (opcional)
-    static delete(id, callback) {
+    delete: async (id) => {
         const sql = "DELETE FROM logs WHERE id=?";
-        db.query(sql, [id], callback);
+        return await db.execute(sql, [id]);
     }
-}
+};
 
 module.exports = Log;

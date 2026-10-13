@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Nunito Sans', 'Segoe UI', Arial, sans-serif;
+    background: #f7f9fb;
+    color: #191c1e;
+    margin: 0;
+  }
+
+  code, kbd, samp, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+.ai-gradient {
+  background: linear-gradient(135deg, #0c9488 0%, #0058be 100%);
+}
+
+.ai-gradient-teal {
+  background: linear-gradient(135deg, #0c9488 0%, #89f5e7 100%);
+}
+
+.ai-glow {
+  box-shadow: 0px 0px 12px rgba(13, 148, 136, 0.2);
+}
+
+.ai-glow-inset {
+  box-shadow: inset 0px 0px 12px rgba(13, 148, 136, 0.15);
+}
+
+.surface-1-shadow {
+  box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+.surface-2-shadow {
+  box-shadow: 0px 10px 32px rgba(15, 23, 42, 0.12);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.ai-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-shadow-none {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+}

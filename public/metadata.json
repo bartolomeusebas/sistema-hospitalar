@@ -1,0 +1,6 @@
+{
+  "name": "MediScan AI",
+  "description": "Precision Diagnostics clinical intelligence platform with diagnostic imaging analysis, patient records, interactive AI radiography overlays, and report generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
