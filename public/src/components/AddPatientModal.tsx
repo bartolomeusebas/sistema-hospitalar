@@ -10,7 +10,7 @@ interface AddPatientModalProps {
   onAddPatient: (newPatient: Patient) => void;
 }
 
-type Gender = 'Male' | 'Female' | 'Other';
+type Gender = 'Masculino' | 'Feminino' | 'Outro';
 
 export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   isOpen,
@@ -19,7 +19,7 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
-  const [gender, setGender] = useState<Gender>('Female');
+  const [gender, setGender] = useState<Gender>('Feminino');
 
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
@@ -37,9 +37,9 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 
   const mapGenderToSexo = (gender: Gender) => {
     switch (gender) {
-      case 'Male':
+      case 'Masculino':
         return 'M';
-      case 'Female':
+      case 'Feminino':
         return 'F';
       default:
         return 'O';
@@ -71,7 +71,7 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
   const resetForm = () => {
     setName('');
     setDob('');
-    setGender('Female');
+    setGender('Feminino');
     setTelefone('');
     setEndereco('');
     setBloodType('');
@@ -218,7 +218,7 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
 
         lastVisit: 'Hoje',
 
-        status: 'Active',
+        status: 'Ativo',
 
         examCount: 0
       };
@@ -488,15 +488,15 @@ export const AddPatientModal: React.FC<AddPatientModalProps> = ({
                   focus:outline-none
                 "
               >
-                <option value="Female">
+                <option value="Feminino">
                   Feminino
                 </option>
 
-                <option value="Male">
+                <option value="Masculino">
                   Masculino
                 </option>
 
-                <option value="Other">
+                <option value="Outro">
                   Outro
                 </option>
               </select>

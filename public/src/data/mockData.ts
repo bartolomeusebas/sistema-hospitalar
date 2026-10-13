@@ -1,12 +1,12 @@
 import { Patient, ExaminationHistory, AiFinding, PendingReview, ScheduleItem, UserProfile } from '../types';
 
 export const currentUser: UserProfile = {
-  name: 'Dr. Emily Smith, MD',
-  title: 'Attending Radiologist',
+  name: 'Médico',
+  title: 'Médico',
   email: 'dr.smith@hospital.org',
   avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsUC1nPDm1e8UQab2AzrtXsqkQTueq0YaW26HhBfvfTIAtUSjRSy45DAum9Y1NK8as2Ca6pq9jYeICxlwSLpCLsX_AXhrwek5rmHR0ROKKMkXx2WQLUpyXDjnTt4gv-YO6erarHHYH1577EZFpp2e8HAD7j289wl9M1q8fasZihq04wFiaZXH78wTvMTUupwW0TS7AsFAuDvgliMNudMC7_cJtBcLRMaJNOSTkGO2qDq2OzjQpC6VK',
   role: 'doctor',
-  license: 'NY-123456'
+  license: 'Demonstração TCC'
 };
 
 export const mockPatients: Patient[] = [
@@ -14,7 +14,7 @@ export const mockPatients: Patient[] = [
     id: 'PT-88492',
     mrn: '#MRN-45A',
     name: 'John Doe',
-    gender: 'Male',
+    gender: 'Masculino',
     dob: '1965-12-04',
     age: 58,
     bloodType: 'O Positive',
@@ -24,7 +24,7 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. A. Chen',
     activeConditions: ['Hypertension', 'Type 2 Diabetes'],
     lastVisit: '2023-10-24',
-    status: 'Active',
+    status: 'Ativo',
     avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAHNyShMqjMBnkexvXc_KtibbBcE1LvdD-HLjkXDhaI5Pj_T7KuLh8yUtOITmyvelE2hk-EMk07U9VjgyfRlZ_3V3erlNhYkc93cR_rLzCE1B_tjDFG-G68d19G-CU_4gAR4shedOVpfCdF-DfyxkRkbLs1RquLeP7KwVOVQBa9smPaHhBBJc7WkEKZmwNxXXiDwSdPRyZ9TE3NDx6Fw5W-LXyvkorb_VEeJUTvjr2md3Qf3zVNeZW',
     examCount: 4
   },
@@ -32,7 +32,7 @@ export const mockPatients: Patient[] = [
     id: 'PT-99421',
     mrn: '#MRN-88C',
     name: 'Robert Chen',
-    gender: 'Male',
+    gender: 'Masculino',
     dob: '1978-06-15',
     age: 45,
     bloodType: 'A Positive',
@@ -42,14 +42,14 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. S. Williams',
     activeConditions: ['Asthma', 'Mild Dyspnea'],
     lastVisit: '2023-10-12',
-    status: 'Needs Review',
+    status: 'Em revisão',
     examCount: 3
   },
   {
     id: 'PT-9103',
     mrn: '#MRN-19B',
     name: 'Mary Smith',
-    gender: 'Female',
+    gender: 'Feminino',
     dob: '1945-11-03',
     age: 78,
     bloodType: 'B Positive',
@@ -59,7 +59,7 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. E. Smith',
     activeConditions: ['Osteoarthritis', 'Cardiomegaly Monitor'],
     lastVisit: '2023-11-02',
-    status: 'Active',
+    status: 'Ativo',
     avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAW8Fz502zg0L1C4xuUt7-iaKTbnqvNtrtKW2kAmVr-3HZ2D33VQ7-TmjDM9SfSMAGIwuNf8bHRgZyaHjQS5UAoSCThRONj4-3SNgwyzq0fpYbe5PXYb3eM7zJj7bwXuxArKTRTJ40_on6M6-Cf_fh5qNTrIy62Hi7_L5daF8OugUFCdFoX9ZrpEcNW0scJSJyl4X_wV1NvlpJcT_YnL-M5-dlgtlJ4AziQQuvdtmAooLne_f4jRdCo',
     examCount: 12
   },
@@ -67,7 +67,7 @@ export const mockPatients: Patient[] = [
     id: 'PT-88312',
     mrn: '#MRN-33D',
     name: 'Sarah Jenkins',
-    gender: 'Female',
+    gender: 'Feminino',
     dob: '1989-02-14',
     age: 35,
     bloodType: 'O Negative',
@@ -77,14 +77,14 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. A. Chen',
     activeConditions: ['Migraine with Aura'],
     lastVisit: '2023-10-24',
-    status: 'Stable',
+    status: 'Estável',
     examCount: 2
   },
   {
     id: 'PT-77109',
     mrn: '#MRN-92E',
     name: 'Marcus Davis',
-    gender: 'Male',
+    gender: 'Masculino',
     dob: '1958-09-20',
     age: 65,
     bloodType: 'AB Positive',
@@ -94,14 +94,14 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. S. Williams',
     activeConditions: ['COPD', 'Post-Op Observation'],
     lastVisit: 'Today',
-    status: 'In Treatment',
+    status: 'Em tratamento',
     examCount: 7
   },
   {
     id: 'PT-2214',
     mrn: '#MRN-04F',
     name: 'Alice Johnson',
-    gender: 'Female',
+    gender: 'Feminino',
     dob: '1992-03-22',
     age: 32,
     bloodType: 'A Negative',
@@ -111,7 +111,7 @@ export const mockPatients: Patient[] = [
     primaryCare: 'Dr. E. Smith',
     activeConditions: ['None'],
     lastVisit: '2022-08-15',
-    status: 'Inactive',
+    status: 'Inativo',
     examCount: 1
   }
 ];

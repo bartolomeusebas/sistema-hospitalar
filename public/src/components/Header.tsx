@@ -39,25 +39,9 @@ export const Header: React.FC<HeaderProps> = ({
   const notifications = [
     {
       id: 1,
-      title: 'Critical Finding Flagged',
-      desc: 'PT-8821: Potential pulmonary opacity detected.',
-      time: '5m ago',
-      urgent: true,
-      patientId: 'PT-99421'
-    },
-    {
-      id: 2,
-      title: 'AI Analysis Complete',
-      desc: 'PT-88492: Chest PA & Lateral analysis finished.',
-      time: '12m ago',
-      urgent: false,
-      patientId: 'PT-88492'
-    },
-    {
-      id: 3,
-      title: 'GPU Cluster Optimal',
-      desc: 'Compute load normalized at 65% utilization.',
-      time: '1h ago',
+      title: 'Ambiente de demonstração',
+      desc: 'Protótipo para a defesa do TCC. Não utilizar com dados de pacientes reais.',
+      time: 'Agora',
       urgent: false
     }
   ];
@@ -162,17 +146,14 @@ export const Header: React.FC<HeaderProps> = ({
                   Notificações médicas
                 </span>
                 <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">
-                  1 urgente
+                  Demonstração
                 </span>
               </div>
               <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
                 {notifications.map((n) => (
                   <div
                     key={n.id}
-                    onClick={() => {
-                      setShowNotifications(false);
-                      onNavigate('ai_diagnostics');
-                    }}
+                    onClick={() => setShowNotifications(false)}
                     className="p-3 hover:bg-slate-50 cursor-pointer transition-colors flex gap-2.5 items-start"
                   >
                     {n.urgent ? (
@@ -218,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="px-4 py-2 border-b border-slate-100">
                 <p className="font-semibold text-xs text-slate-900">{user.name}</p>
                 <p className="text-[11px] text-slate-500">{user.email}</p>
-                <p className="text-[10px] font-mono text-slate-400 mt-0.5">License: {user.license}</p>
+                <p className="text-[10px] font-mono text-slate-400 mt-0.5">Cédula: {user.license}</p>
               </div>
               <div className="py-1">
                 <button

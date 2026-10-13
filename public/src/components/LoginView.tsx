@@ -43,7 +43,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <h1 className="font-bold text-2xl tracking-tight text-white">MediScan AI</h1>
             </div>
             <p className="text-[#bec6e0] text-sm lg:text-base leading-relaxed max-w-md">
-              Precision Diagnostics powered by advanced artificial intelligence. Secure, reliable, and designed for modern healthcare professionals.
+              Protótipo de diagnóstico por imagem para a defesa do trabalho de conclusão de curso. Os resultados desta demonstração não substituem uma avaliação médica.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             <span>Segurança empresarial</span>
             <span className="flex items-center gap-1.5 text-[#bec6e0]">
               <Shield className="w-4 h-4 text-[#89f5e7]" />
-              HIPAA Compliant
+              Demonstração académica
             </span>
           </div>
         </div>
@@ -181,7 +181,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 />
                 <span>Lembrar-me</span>
               </label>
-              <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Please contact IT Helpdesk or your department system administrator for password recovery.'); }} className="text-[#0058be] hover:underline font-medium">
+              <a href="#forgot" onClick={(e) => { e.preventDefault(); alert('Nesta demonstração, use uma das contas de exemplo acima. A recuperação de senha não faz parte do protótipo.'); }} className="text-[#0058be] hover:underline font-medium">
                 Esqueceu a palavra-passe?
               </a>
             </div>
@@ -205,7 +205,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 href="#help"
                 onClick={(e) => {
                   e.preventDefault();
-                  alert('IT Helpdesk Hotline: (800) 555-MEDI (Ext 4040)\nEmergency Diagnostic Support: 24/7 Active');
+                  alert('Este é um protótipo para defesa de TCC. O suporte técnico real não está incluído.');
                 }}
                 className="text-[#0058be] hover:underline font-medium"
               >

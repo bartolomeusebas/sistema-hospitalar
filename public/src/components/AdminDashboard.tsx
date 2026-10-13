@@ -55,9 +55,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   ];
 
   const recentExams = exams.slice(0, 4).map((exam) => ({
-    id: String(exam.paciente_id), examId: String(exam.id), type: exam.tipo,
-    status: results.some((result) => result.exame_id === exam.id) ? 'Complete' : 'Analyzing',
-    time: new Date(exam.data_exame).toLocaleString('pt-PT'), urgent: false
+    patientId: String(exam.paciente_id),
+    examId: String(exam.id),
+    type: exam.tipo,
+    done: results.some((result) => result.exame_id === exam.id),
+    time: exam.data_exame ? new Date(exam.data_exame).toLocaleString('pt-PT') : 'Sem data'
   }));
 
   const pendingList = exams
@@ -68,7 +70,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       title: exam.tipo || 'Exame de imagem',
       description: `Exame de ${exam.paciente || 'paciente'} aguardando análise.`,
       patientId: String(exam.paciente_id),
-      priority: 'Standard' as const
+      priority: 'Normal' as const
     }));
 
   const handleAssignDoctor = (reviewId: string) => {
@@ -344,17 +346,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <tr
                     key={i}
                     onClick={() => {
-                      onSelectPatient('PT-88492');
+                      onSelectPatient(row.patientId);
+                      onSelectExam(row.examId);
                       onNavigate('ai_diagnostics');
                     }}
                     className="hover:bg-slate-50 cursor-pointer transition-colors"
                   >
                     <td className="px-5 py-3.5 font-mono font-semibold text-[#131b2e]">
-                      {row.id}
+                      {row.patientId}
                     </td>
                     <td className="px-4 py-3.5 font-medium text-slate-700">{row.type}</td>
                     <td className="px-4 py-3.5">
-                      {row.status === 'Complete' ? (
+                      {row.done ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#89f5e7]/20 text-[#0c9488] font-semibold text-[11px]">
                           <CheckCircle2 className="w-3 h-3" /> Concluído
                         </span>
@@ -393,12 +396,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               >
                 <div
                   className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    review.priority === 'Urgent'
+                    review.priority === 'Urgente'
                       ? 'bg-red-100 text-[#ba1a1a]'
                       : 'bg-slate-100 text-slate-600'
                   }`}
                 >
-                  {review.priority === 'Urgent' ? (
+                  {review.priority === 'Urgente' ? (
                     <AlertTriangle className="w-5 h-5" />
                   ) : (
                     <ClipboardCheck className="w-5 h-5" />
@@ -419,14 +422,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <div className="mt-2 flex items-center justify-between">
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider ${
-                        review.priority === 'Urgent' ? 'text-[#ba1a1a]' : 'text-slate-500'
+                        review.priority === 'Urgente' ? 'text-[#ba1a1a]' : 'text-slate-500'
                       }`}
                     >
                       {review.priority}
                     </span>
                     <button
                       onClick={() => {
-                        if (review.priority === 'Urgent') {
+                        if (review.priority === 'Urgente') {
                           handleAssignDoctor(review.id);
                         } else {
                           onSelectPatient(review.patientId);
@@ -435,7 +438,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       }}
                       className="text-xs font-semibold text-[#0058be] hover:underline"
                     >
-                      {review.priority === 'Urgent' ? 'Assign Doctor' : 'Review Scan'}
+                      {review.priority === 'Urgente' ? 'Encaminhar médico' : 'Rever exame'}
                     </button>
                   </div>
                 </div>

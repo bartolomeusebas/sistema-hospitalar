@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ViewType, Patient, ExaminationHistory, UserProfile } from './types';
+import React, { useState } from 'react';
+import { ViewType, Patient, UserProfile } from './types';
 import { currentUser as defaultUser } from './data/mockData';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -20,7 +20,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState<ViewType>('login');
   const [user, setUser] = useState<UserProfile>(defaultUser);
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [examinations] = useState<ExaminationHistory[]>([]);
   const [selectedPatientId, setSelectedPatientId] = useState<string>('');
   const [selectedExamId, setSelectedExamId] = useState<string>('');
 
@@ -64,7 +63,14 @@ export default function App() {
     const data = await readApiResponse(response);
     if (!response.ok) throw new Error(data.mensagem || data.erro || 'Usuário ou senha incorretos.');
     const role = data.user?.tipo === 'admin' ? 'admin' : 'doctor';
-    setUser({ ...defaultUser, name: data.user?.nome || defaultUser.name, email, role });
+    setUser({
+      ...defaultUser,
+      name: data.user?.nome || defaultUser.name,
+      email,
+      role,
+      title: role === 'admin' ? 'Administrador' : 'Médico',
+      license: 'Demonstração TCC'
+    });
     await loadPatients();
     setCurrentView(role === 'admin' ? 'admin_dashboard' : 'doctor_dashboard');
   };
@@ -142,6 +148,7 @@ export default function App() {
               onSelectPatient={(id) => {
                 handleSelectPatient(id);
               }}
+              onSelectExam={handleSelectExam}
               patients={patients}
               user={user}
             />
@@ -156,17 +163,22 @@ export default function App() {
             />
           )}
 
-          {currentView === 'patient_detail' && (
+          {(currentView === 'patient_detail' || currentView === 'ai_diagnostics' || currentView === 'imaging_queue' || currentView === 'reporting') && !activePatient && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center text-sm text-slate-500">
+              Ainda não há pacientes registados. Crie um paciente para continuar a demonstração.
+            </div>
+          )}
+
+          {currentView === 'patient_detail' && activePatient && (
             <PatientDetail
               patient={activePatient}
-              examinations={examinations}
               onBack={() => setCurrentView('patient_records')}
               onNavigate={(view) => setCurrentView(view)}
               onSelectExam={handleSelectExam}
             />
           )}
 
-          {currentView === 'ai_diagnostics' && (
+          {currentView === 'ai_diagnostics' && activePatient && (
             <AiDiagnostics
               patient={activePatient}
               examId={selectedExamId}
@@ -174,7 +186,7 @@ export default function App() {
             />
           )}
 
-          {currentView === 'imaging_queue' && (
+          {currentView === 'imaging_queue' && activePatient && (
             <ImagingQueue
               patient={activePatient}
               onExamCreated={handleSelectExam}
@@ -182,7 +194,7 @@ export default function App() {
             />
           )}
 
-          {currentView === 'reporting' && (
+          {currentView === 'reporting' && activePatient && (
             <Reporting
               patient={activePatient}
               user={user}

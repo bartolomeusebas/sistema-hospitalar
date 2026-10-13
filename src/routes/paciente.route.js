@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/paciente.controller");
+const { authMiddleware } = require("../controllers/auth.controller");
 
-// ROTAS CORRETAS
+router.use(authMiddleware);
+
 router.get("/", controller.getAll);
 router.get("/:id", controller.getById);
 router.post("/", controller.create);      

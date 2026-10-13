@@ -13,9 +13,9 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
   onClose,
   onNavigate
 }) => {
-  const [traumaType, setTraumaType] = useState('Acute Respiratory Distress / Pneumothorax');
-  const [urgencyLevel, setUrgencyLevel] = useState('Stat Priority 1');
-  const [notes, setNotes] = useState('Emergency Department incoming trauma, severe dyspnea, SPO2 84%. Priority GPU queue bypass requested.');
+  const [traumaType, setTraumaType] = useState('Dificuldade respiratória aguda');
+  const [urgencyLevel, setUrgencyLevel] = useState('Prioridade 1');
+  const [notes, setNotes] = useState('Exemplo para a defesa: falta de ar intensa e saturação baixa. Este texto é apenas ilustrativo.');
 
   if (!isOpen) return null;
 
@@ -54,10 +54,10 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
               onChange={(e) => setTraumaType(e.target.value)}
               className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none"
             >
-              <option>Acute Respiratory Distress / Pneumothorax</option>
-              <option>Acute Intracranial Hemorrhage / Stroke Protocol</option>
-              <option>Blunt Thoracoabdominal Trauma</option>
-              <option>Massive Pulmonary Embolism</option>
+              <option>Dificuldade respiratória aguda</option>
+              <option>Suspeita de acidente vascular cerebral</option>
+              <option>Trauma toracoabdominal</option>
+              <option>Suspeita de embolia pulmonar</option>
             </select>
           </div>
 
@@ -76,7 +76,7 @@ export const EmergencyModal: React.FC<EmergencyModalProps> = ({
               <input
                 type="text"
                 readOnly
-                value="Node-01 (Stat Lock)"
+                value="Nó 01 (demonstração)"
                 className="w-full p-2.5 bg-slate-100 text-slate-700 font-mono border border-slate-200 rounded-xl focus:outline-none"
               />
             </div>

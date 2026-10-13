@@ -10,15 +10,32 @@ const calculateAge = (date) => {
     return age;
 };
 
+const mapGender = (sexo) => {
+    const value = String(sexo || "").trim().toLowerCase();
+    if (value === "m" || value === "masculino" || value === "male") return "Masculino";
+    if (value === "f" || value === "feminino" || value === "female") return "Feminino";
+    return "Outro";
+};
+
+const mapStatus = (status) => {
+    const labels = {
+        Active: "Ativo",
+        Inactive: "Inativo",
+        "Needs Review": "Em revisão",
+        "In Treatment": "Em tratamento",
+        Stable: "Estável"
+    };
+    return labels[status] || status || "Ativo";
+};
+
 const presentPatient = (patient) => {
     if (!patient) return null;
     const id = String(patient.id);
-    const gender = patient.sexo === "M" ? "Male" : patient.sexo === "F" ? "Female" : "Other";
     return {
         id,
         mrn: patient.mrn || `MRN-${id.padStart(6, "0")}`,
         name: patient.nome,
-        gender,
+        gender: mapGender(patient.sexo),
         dob: patient.data_nascimento,
         age: calculateAge(patient.data_nascimento),
         bloodType: patient.tipo_sanguineo || "Não informado",
@@ -28,7 +45,7 @@ const presentPatient = (patient) => {
         primaryCare: patient.medico_responsavel || "Não atribuído",
         activeConditions: patient.condicoes_ativas ? String(patient.condicoes_ativas).split(",").map((item) => item.trim()).filter(Boolean) : [],
         lastVisit: patient.ultima_visita || "Sem visitas registradas",
-        status: patient.status || "Active",
+        status: mapStatus(patient.status),
         examCount: Number(patient.exam_count || 0),
         avatar: patient.avatar || undefined
     };

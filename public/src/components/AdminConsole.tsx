@@ -189,7 +189,7 @@ export const AdminConsole: React.FC<AdminConsoleProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-[#0c9488]" />
             <h3 className="text-sm font-bold text-[#131b2e] uppercase tracking-wider">
-              Trilha de auditoria HIPAA e segurança
+              Registo de auditoria da demonstração
             </h3>
           </div>
           <span className="text-xs text-slate-400">Registo imutável encriptado</span>

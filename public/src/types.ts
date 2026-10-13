@@ -24,7 +24,7 @@ export interface Patient {
   id: string;
   mrn: string;
   name: string;
-  gender: 'Male' | 'Female' | 'Other';
+  gender: 'Masculino' | 'Feminino' | 'Outro';
   dob: string;
   age: number;
   bloodType: string;
@@ -34,7 +34,7 @@ export interface Patient {
   primaryCare: string;
   activeConditions: string[];
   lastVisit: string;
-  status: 'Active' | 'Inactive' | 'Needs Review' | 'In Treatment' | 'Stable';
+  status: 'Ativo' | 'Inativo' | 'Em revisão' | 'Em tratamento' | 'Estável';
   avatar?: string;
   examCount: number;
 }

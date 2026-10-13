@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ViewType, Patient } from '../types';
-import { mockAiFindings } from '../data/mockData';
 import {
   BrainCircuit,
   Sliders,
@@ -74,7 +73,7 @@ export const AiDiagnostics: React.FC<AiDiagnosticsProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-bold text-[#131b2e]">
-                Patient {patient.name} ({patient.id})
+                Paciente {patient.name} ({patient.id})
               </h2>
               <span className="bg-[#89f5e7]/20 text-[#0c9488] text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0c9488] animate-ping" />
@@ -95,7 +94,7 @@ export const AiDiagnostics: React.FC<AiDiagnosticsProps> = ({
 
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => alert('Exporting DICOM Series and metadata package...')}
+            onClick={() => alert('A exportação DICOM não faz parte desta demonstração.')}
             className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
@@ -342,52 +341,17 @@ export const AiDiagnostics: React.FC<AiDiagnosticsProps> = ({
               </div>
             )}
 
-            <div className="space-y-4">
-              {(diagnosis ? mockAiFindings : []).map((finding) => (
-                <div
-                  key={finding.id}
-                  className={`p-4 rounded-xl border transition-all ${
-                    finding.severity === 'high'
-                      ? 'border-red-200 bg-red-50/40'
-                      : 'border-slate-200 bg-slate-50/50'
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-1.5">
-                    <h4 className="text-xs font-bold text-[#131b2e]">{finding.name}</h4>
-                    <span
-                      className={`text-xs font-bold font-mono ${
-                        finding.severity === 'high' ? 'text-[#ba1a1a]' : 'text-slate-500'
-                      }`}
-                    >
-                      {finding.probability}%
-                    </span>
-                  </div>
-
-                  {/* Probability Bar */}
-                  <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden mb-2">
-                    <div
-                      style={{ width: `${finding.probability}%` }}
-                      className={`h-2 rounded-full ${
-                        finding.severity === 'high' ? 'bg-[#ba1a1a]' : 'bg-[#0c9488]'
-                      }`}
-                    />
-                  </div>
-
-                  <p className="text-xs text-slate-600 leading-relaxed">{finding.description}</p>
-                </div>
-              ))}
-              {!diagnosis && (
-                <p className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
-                  Os achados detalhados aparecerão depois de uma análise real concluída.
-                </p>
-              )}
-            </div>
+            {!diagnosis && (
+              <p className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+                A interpretação aparece aqui depois de analisar um exame na fila.
+              </p>
+            )}
 
             {/* Disclaimer Box */}
             <div className="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100 flex items-start gap-2.5 text-xs text-blue-900">
               <Info className="w-4 h-4 text-[#0058be] shrink-0 mt-0.5" />
               <p className="text-[11px] leading-relaxed">
-                <strong>Apoio à decisão clínica:</strong> os marcadores de diagnóstico por IA são gerados por segmentação neural e exigem revisão médica formal antes do planeamento do tratamento.
+                <strong>Demonstração de TCC:</strong> a imagem e os controlos visuais são ilustrativos. O texto da interpretação vem da análise associada ao exame e não constitui diagnóstico médico.
               </p>
             </div>
           </div>

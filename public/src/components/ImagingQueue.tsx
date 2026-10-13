@@ -36,9 +36,9 @@ export const ImagingQueue: React.FC<ImagingQueueProps> = ({
 }) => {
   const [examDate, setExamDate] = useState(new Date().toISOString().slice(0, 10));
   const [examTime, setExamTime] = useState(new Date().toTimeString().slice(0, 5));
-  const [modality, setModality] = useState<'X-Ray (CR/DX)' | 'CT Scan' | 'MRI' | 'Ultrasound'>('X-Ray (CR/DX)');
+  const [modality, setModality] = useState('Radiografia');
   const [indication, setIndication] = useState(
-    'Patient presents with persistent dry cough and localized pleuritic pain on deep inspiration. Evaluate for lower lobe consolidation or interstitial changes.'
+    'Tosse seca persistente e dor ao inspirar. Avaliar possível consolidação no lobo inferior.'
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -204,7 +204,7 @@ export const ImagingQueue: React.FC<ImagingQueueProps> = ({
                 Data de nascimento
               </span>
               <span className="font-bold text-slate-800 text-sm mt-0.5 block">
-                {patient.dob} ({patient.age} yrs)
+                {patient.dob} ({patient.age} anos)
               </span>
             </div>
             <div className="bg-slate-50 p-3 rounded-xl">
@@ -251,10 +251,10 @@ export const ImagingQueue: React.FC<ImagingQueueProps> = ({
                 onChange={(e) => setModality(e.target.value as any)}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0058be]"
               >
-                <option>X-Ray (CR/DX)</option>
+                <option>Radiografia</option>
                 <option>Tomografia computorizada</option>
-                <option>MRI</option>
-                <option>Ultrassom</option>
+                <option>Ressonância magnética</option>
+                <option>Ecografia</option>
               </select>
             </div>
           </div>

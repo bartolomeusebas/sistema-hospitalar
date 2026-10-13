@@ -44,24 +44,6 @@ app.use('/exames', exameRoute);
 app.use('/historico', historicoRoute);
 app.use('/logs', logRoute);
 
-// Páginas HTML
-const pages = [
-    'menu',
-    'dashboard',
-    'exames',
-    'pacientes',
-    'resultados_ia',
-    'historico_clinico',
-    'usuarios',
-    'logs'
-];
-
-pages.forEach((page) => {
-    app.get(`/${page}.html`, (req, res) => {
-        res.sendFile(path.join(__dirname, 'public', 'users', `${page}.html`));
-    });
-});
-
 // Rota inexistente
 app.use((req, res) => {
     res.status(404).json({

@@ -62,7 +62,7 @@ export const RunAiModal: React.FC<RunAiModalProps> = ({
                 }`}
               >
                 <span className="block text-xs">Raio-X do tórax</span>
-                <span className="text-[10px] text-slate-400 font-normal">Robert Chen</span>
+                <span className="text-[10px] text-slate-400 font-normal">Exemplo</span>
               </button>
               <button
                 type="button"
@@ -74,7 +74,7 @@ export const RunAiModal: React.FC<RunAiModalProps> = ({
                 }`}
               >
                 <span className="block text-xs">RM cerebral</span>
-                <span className="text-[10px] text-slate-400 font-normal">Sarah Jenkins</span>
+                <span className="text-[10px] text-slate-400 font-normal">Exemplo</span>
               </button>
               <button
                 type="button"
@@ -86,7 +86,7 @@ export const RunAiModal: React.FC<RunAiModalProps> = ({
                 }`}
               >
                 <span className="block text-xs">TC do tórax</span>
-                <span className="text-[10px] text-slate-400 font-normal">John Doe</span>
+                <span className="text-[10px] text-slate-400 font-normal">Exemplo</span>
               </button>
             </div>
           </div>
@@ -94,10 +94,10 @@ export const RunAiModal: React.FC<RunAiModalProps> = ({
           <div className="p-4 rounded-xl bg-[#131b2e] text-white flex items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-[10px] text-[#89f5e7] uppercase font-mono tracking-wider">
-                Target Model
+                Modelo de demonstração
               </span>
               <p className="text-xs font-bold">MedV-DenseNet-X v4.2</p>
-              <p className="text-[11px] text-slate-400">Pneumothorax, Pneumonia & Nodule Filter</p>
+              <p className="text-[11px] text-slate-400">Ilustração para a defesa, sem diagnóstico real</p>
             </div>
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-[#89f5e7]">
               <Sparkles className="w-4 h-4" />
@@ -110,7 +110,7 @@ export const RunAiModal: React.FC<RunAiModalProps> = ({
               onClick={onClose}
               className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl font-semibold text-slate-700 text-xs sm:text-sm"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="button"

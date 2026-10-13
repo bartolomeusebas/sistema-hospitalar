@@ -26,7 +26,7 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
   onOpenAddPatient
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('Todos');
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredPatients = patients.filter((p) => {
@@ -35,7 +35,7 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
       p.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.mrn.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === 'All' || p.status === statusFilter;
+    const matchesStatus = statusFilter === 'Todos' || p.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
@@ -81,7 +81,7 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
           <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 shrink-0">
             <Filter className="w-3.5 h-3.5" /> Estado:
           </span>
-          {['All', 'Active', 'Needs Review', 'In Treatment', 'Inactive'].map((status) => (
+          {['Todos', 'Ativo', 'Em revisão', 'Em tratamento', 'Inativo'].map((status) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
@@ -105,9 +105,9 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
               <tr>
                 <th className="px-6 py-4">Nome do paciente</th>
                 <th className="px-5 py-4">ID / MRN do paciente</th>
-                <th className="px-4 py-4">Demographics</th>
-                <th className="px-4 py-4">Last Visit</th>
-                <th className="px-4 py-4 text-center">Exams</th>
+                <th className="px-4 py-4">Idade / sexo</th>
+                <th className="px-4 py-4">Última visita</th>
+                <th className="px-4 py-4 text-center">Exames</th>
                 <th className="px-4 py-4">Estado</th>
                 <th className="px-6 py-4 text-right">Ações</th>
               </tr>
@@ -166,10 +166,10 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
 
                     {/* Demographics */}
                     <td className="px-4 py-4 text-slate-600">
-                      <span>{patient.age} yrs</span> •{' '}
-                      <span className="capitalize">{patient.gender}</span>
+                      <span>{patient.age} anos</span> •{' '}
+                      <span>{patient.gender}</span>
                       <span className="block text-[11px] text-slate-400">
-                        DOB: {patient.dob}
+                        Nascimento: {patient.dob}
                       </span>
                     </td>
 
@@ -189,11 +189,11 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
                     <td className="px-4 py-4">
                       <span
                         className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-flex items-center gap-1.5 ${
-                          patient.status === 'Needs Review'
+                          patient.status === 'Em revisão'
                             ? 'bg-red-100 text-[#ba1a1a]'
-                            : patient.status === 'In Treatment'
+                            : patient.status === 'Em tratamento'
                             ? 'bg-amber-100 text-amber-800'
-                            : patient.status === 'Active'
+                            : patient.status === 'Ativo'
                             ? 'bg-[#89f5e7]/20 text-[#0c9488]'
                             : 'bg-slate-100 text-slate-500'
                         }`}
@@ -211,7 +211,7 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
                             onSelectPatient(patient.id);
                             onNavigate('imaging_queue');
                           }}
-                          title="New Exam for Patient"
+                          title="Novo exame para o paciente"
                           className="p-1.5 rounded-lg text-slate-500 hover:text-[#0058be] hover:bg-slate-100 transition-colors"
                         >
                           <Boxes className="w-4 h-4" />
@@ -224,7 +224,7 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
                           }}
                           className="px-3 py-1.5 bg-slate-100 hover:bg-[#131b2e] hover:text-white rounded-lg text-xs font-semibold text-slate-700 transition-colors"
                         >
-                          View Profile
+                          Ver perfil
                         </button>
                       </div>
                     </td>
@@ -238,9 +238,8 @@ export const PatientRecords: React.FC<PatientRecordsProps> = ({
         {/* Pagination Bar */}
         <div className="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <span>
-            Showing <strong className="text-slate-800">1</strong> to{' '}
-            <strong className="text-slate-800">{filteredPatients.length}</strong> of{' '}
-            <strong className="text-slate-800">{patients.length}</strong> patients
+            A mostrar <strong className="text-slate-800">{filteredPatients.length}</strong> de{' '}
+            <strong className="text-slate-800">{patients.length}</strong> pacientes
           </span>
           <div className="flex items-center gap-1">
             <button
